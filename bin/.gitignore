@@ -1,0 +1,6 @@
+# .gitignore in the "build" directory
+
+# Ignore all files
+*
+# Exceptions
+!.gitignore
