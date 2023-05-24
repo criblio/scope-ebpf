@@ -59,16 +59,4 @@ jobs:
           platforms: ${{ matrix.platform }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          tags: criblio/scope-ebpf:next
-
-      - name: Create Container
-        run: docker create --name scope_release_${{ steps.build-arch.outputs.build_arch }} --platform ${{ matrix.platform }} criblio/scope-ebpf:next
-
-      - name: Copy the build from container
-        run: docker cp scope_release_${{ steps.build-arch.outputs.build_arch }}:/bin/scope-ebpf /tmp/scope-ebpf-${{ steps.build-arch.outputs.build_arch }}
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: scope-ebpf
-          path: /tmp/scope-ebpf-${{ steps.build-arch.outputs.build_arch }}
+          tags: cribl/scope-ebpf:latest

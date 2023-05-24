@@ -19,7 +19,7 @@ scope-ebpf is an eBPF loader.
 
 ## Dependencies
 
-See the **[Dockerfile](Dockerfile)**  to get an idea what packages are required to build scope-epbf project.
+See the **[Dockerfile](Dockerfile)**  to get an idea what packages are required to build scope-ebpf project.
 
 You will need to install the following required packages in the system, to build `scope-ebpf` from sources on host:
 
@@ -68,7 +68,7 @@ sudo ./bin/scope-ebpf
 To run the scope-ebpf loader from the Docker image, run the following command:
 
 ```bash
-docker run --rm --cap-add SYS_ADMIN -v /sys/kernel/debug:/sys/kernel/debug:ro criblio/scope-epbf:latest scope-ebpf
+docker run --rm --cap-add SYS_ADMIN -v /sys/kernel/debug:/sys/kernel/debug:ro cribl/scope-ebpf:latest scope-ebpf
 ```
 
 ## AppScope integration
