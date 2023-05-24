@@ -16,7 +16,7 @@
 
 /*
  * Signals are filtered. We want to inform any user mode
- * readers about signals that are likley to cause a crash
+ * readers about signals that are likely to cause a crash
  * in an application. At this point the signals we pass are:
  * SIGSEGV, SIGBUS, SIGILL and SIGFPE
  *
