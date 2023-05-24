@@ -1,5 +1,5 @@
 DOCKER_BUILDER_IMAGE_NAME ?= cribl/scope-ebpf-builder
-DOCKER_BUILDER_TAG ?= local
+DOCKER_BUILDER_TAG ?= latest
 DOCKER_IMAGE_NAME ?= cribl/scope-ebpf
 DOCKER_IMAGE_TAG ?= latest
 EBPF_LOADER := scope-ebpf
