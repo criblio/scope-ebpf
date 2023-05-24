@@ -1,6 +1,10 @@
 name: Build and Upload
 
 on:
+  release:
+    types:
+      - prereleased
+      - released
   push:
     branches:
       - 'main'
@@ -21,6 +25,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: cribl/scope-ebpf
 
       - name: Setup architecture
         id: build-arch
@@ -51,7 +61,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Login to Docker Hub
-        if: github.event_name == 'push'
+        if: "! github.event.pull_request.head.repo.fork " 
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -66,10 +76,29 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf-builder:latest
 
-      - name: Build and push base image
+      - name: Build and push scope-ebpf image (next)
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v4
         with:
           file: ./docker/base/Dockerfile
-          push: ${{ github.event_name == 'push' }}
+          push: true
+          platforms: ${{ matrix.platform }}
+          tags: cribl/scope-ebpf:next
+
+      # - name: Build and push scope-ebpf image (tag)
+      #   if: github.event_name == 'release'
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     file: ./docker/base/Dockerfile
+      #     push: true
+      #     platforms: ${{ matrix.platform }}
+      #     tags: cribl/scope-ebpf:<TAG>
+
+      - name: Build and push scope-ebpf image (latest)
+        if: github.event_name == 'release'
+        uses: docker/build-push-action@v4
+        with:
+          file: ./docker/base/Dockerfile
+          push: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
