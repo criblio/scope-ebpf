@@ -62,8 +62,6 @@ jobs:
           load: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf-builder:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: List images
         run: |
@@ -79,5 +77,3 @@ jobs:
           build-contexts: |
             cribl/scope-ebpf-builder=docker-image://cribl/scope-ebpf-builder:latest
           tags: cribl/scope-ebpf:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
