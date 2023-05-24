@@ -60,7 +60,7 @@ jobs:
           push: false
           load: true
           platforms: ${{ matrix.platform }}
-          tags: scope-ebpf-builder:local
+          tags: cribl/scope-ebpf-builder:local
 
       - name: Build base image
         uses: docker/build-push-action@v4

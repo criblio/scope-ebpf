@@ -39,5 +39,5 @@ COPY . /opt/scope-ebpf
 
 WORKDIR /opt/scope-ebpf
 
-RUN make all && \
-    cp /opt/scope-ebpf/bin/scope-ebpf /bin/scope-ebpf
+RUN cd /opt/scope-ebpf && make all
+RUN cp /opt/scope-ebpf/bin/scope-ebpf /bin/scope-ebpf
