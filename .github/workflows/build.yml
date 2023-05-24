@@ -67,11 +67,10 @@ jobs:
         run: |
           docker image ls -a
 
-      - name: Build base image
+      - name: Build and push base image
         uses: docker/build-push-action@v4
         with:
           file: ./docker/base/Dockerfile
-          push: false
-          load: true
+          push: ${{ github.event_name == 'push' }}
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
