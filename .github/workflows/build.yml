@@ -67,4 +67,6 @@ jobs:
           file: ./docker/base/Dockerfile
           push: false
           platforms: ${{ matrix.platform }}
+          build-contexts: |
+            cribl/scope-ebpf-builder:local=docker-image://cribl/scope-ebpf-builder:local
           tags: cribl/scope-ebpf:latest
