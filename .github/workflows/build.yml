@@ -74,6 +74,4 @@ jobs:
           push: false
           load: true
           platforms: ${{ matrix.platform }}
-          build-contexts: |
-            cribl/scope-ebpf-builder=docker-image://cribl/scope-ebpf-builder:latest
           tags: cribl/scope-ebpf:latest
