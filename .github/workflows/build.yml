@@ -52,9 +52,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_USERPASS }}
 
-      - name: Build Image and push
+      - name: Build builder image
         uses: docker/build-push-action@v4
         with:
+          context: ./docker/builder
+          file: ./docker/builder/Dockerfile
+          push: false
+          load: true
+          platforms: ${{ matrix.platform }}
+          tags: scope-ebpf-builder:local
+
+      - name: Build base image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./docker/base
+          file: ./docker/base/Dockerfile
           push: false
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
