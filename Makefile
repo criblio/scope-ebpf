@@ -1,6 +1,6 @@
-DOCKER_BUILDER_IMAGE_NAME ?= criblo/scope-ebpf-builder
+DOCKER_BUILDER_IMAGE_NAME ?= cribl/scope-ebpf-builder
 DOCKER_BUILDER_TAG ?= local
-DOCKER_IMAGE_NAME ?= criblio/scope-epbf
+DOCKER_IMAGE_NAME ?= cribl/scope-ebpf
 DOCKER_IMAGE_TAG ?= latest
 EBPF_LOADER := scope-ebpf
 BPFTOOL ?= bpftool
