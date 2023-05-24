@@ -55,7 +55,6 @@ jobs:
       - name: Build builder image
         uses: docker/build-push-action@v4
         with:
-          context: ./docker/builder
           file: ./docker/builder/Dockerfile
           push: false
           load: true
@@ -65,7 +64,6 @@ jobs:
       - name: Build base image
         uses: docker/build-push-action@v4
         with:
-          context: ./docker/base
           file: ./docker/base/Dockerfile
           push: false
           platforms: ${{ matrix.platform }}
