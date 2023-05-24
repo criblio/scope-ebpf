@@ -54,7 +54,6 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-docker-${{ steps.build-arch.outputs.build_arch }}-${{ github.sha }}
-          upload-chunk-size: 1000000
           restore-keys: |
             ${{ runner.os }}-docker-${{ steps.build-arch.outputs.build_arch }}-
             ${{ runner.os }}-docker-
@@ -75,6 +74,8 @@ jobs:
           load: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf-builder:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       - name: Build and push scope-ebpf image (next)
         if: github.event_name == 'push'
@@ -102,3 +103,8 @@ jobs:
           push: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
+
+      - name: Swap build cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
