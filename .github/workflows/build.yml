@@ -102,6 +102,8 @@ jobs:
       #     push: true
       #     platforms: ${{ matrix.platform }}
       #     tags: cribl/scope-ebpf:<TAG>
+      #     build-contexts: |
+      #       cribl/scope-ebpf-builder=docker-image://localhost:5000/cribl/scope-ebpf-builder:latest
 
       - name: Build and push scope-ebpf image (latest)
         if: github.event_name == 'release'
@@ -111,6 +113,8 @@ jobs:
           push: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
+          build-contexts: |
+            cribl/scope-ebpf-builder=docker-image://localhost:5000/cribl/scope-ebpf-builder:latest
 
       - name: Swap build cache
         run: |
