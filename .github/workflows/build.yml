@@ -22,6 +22,12 @@ jobs:
         platform: [linux/amd64]
         # platform: [linux/amd64, linux/arm64] Qemu is not able to build proper ebpf code :/
 
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,18 +53,28 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
-          driver: docker
+          # network=host driver-opt needed to push to local registry
+          driver-opts: network=host
 
       - name: Setup Cache Docker layers
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-docker-${{ steps.build-arch.outputs.build_arch }}-${{ github.sha }}
-          upload-chunk-size: 1000000
           restore-keys: |
             ${{ runner.os }}-docker-${{ steps.build-arch.outputs.build_arch }}-
             ${{ runner.os }}-docker-
             ${{ runner.os }}-
+
+      - name: Build builder image
+        uses: docker/build-push-action@v4
+        with:
+          file: ./docker/builder/Dockerfile
+          push: true
+          platforms: ${{ matrix.platform }}
+          tags: localhost:5000/cribl/scope-ebpf-builder:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
       - name: Login to Docker Hub
         if: "! github.event.pull_request.head.repo.fork " 
@@ -67,23 +83,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_USERPASS }}
 
-      - name: Build builder image
-        uses: docker/build-push-action@v4
-        with:
-          file: ./docker/builder/Dockerfile
-          push: false
-          load: true
-          platforms: ${{ matrix.platform }}
-          tags: cribl/scope-ebpf-builder:latest
-
       - name: Build and push scope-ebpf image (next)
-        if: github.event_name == 'push'
         uses: docker/build-push-action@v4
         with:
           file: ./docker/base/Dockerfile
-          push: true
+          push: ${{ github.event_name == 'push' }}
+          load: ${{ github.event_name != 'push' }}
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:next
+          build-contexts: |
+            cribl/scope-ebpf-builder=docker-image://localhost:5000/cribl/scope-ebpf-builder:latest
 
       # - name: Build and push scope-ebpf image (tag)
       #   if: github.event_name == 'release'
@@ -102,3 +111,8 @@ jobs:
           push: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf:latest
+
+      - name: Swap build cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
