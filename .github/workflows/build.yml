@@ -34,6 +34,8 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker
 
       - name: Setup Cache Docker layers
         uses: actions/cache@v3
@@ -60,6 +62,12 @@ jobs:
           load: true
           platforms: ${{ matrix.platform }}
           tags: cribl/scope-ebpf-builder:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: List images
+        run: |
+          docker image ls -a
 
       - name: Build base image
         uses: docker/build-push-action@v4
@@ -71,3 +79,5 @@ jobs:
           build-contexts: |
             cribl/scope-ebpf-builder=docker-image://cribl/scope-ebpf-builder:latest
           tags: cribl/scope-ebpf:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
