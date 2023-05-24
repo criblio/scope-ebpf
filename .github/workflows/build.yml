@@ -2,6 +2,8 @@ name: Build and Upload
 
 on:
   push:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - 'main'
 
@@ -53,10 +55,6 @@ jobs:
       - name: Build Image and push
         uses: docker/build-push-action@v4
         with:
-          context: .
           push: false
-          load: true
           platforms: ${{ matrix.platform }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
           tags: cribl/scope-ebpf:latest
