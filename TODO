@@ -1,4 +1,3 @@
 - extend CLI with handling parameters e.g. using cobra package
 - add oom implementation
-- handle CI - DockerHub creating release
 - add in CI validation
