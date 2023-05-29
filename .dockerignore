@@ -1,4 +1,6 @@
 .git
 **/docker
+**/deployment
+**/test
 README.md
 TODO

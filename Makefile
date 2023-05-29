@@ -41,7 +41,7 @@ clean:
 	)
 
 scope-ebpf: generate
-	$(GO) build -ldflags="-extldflags=-static" -o bin/${EBPF_LOADER} ./cmd/scope-ebpf
+	$(GO) build -tags "netgo" -ldflags="-extldflags=-static" -o bin/${EBPF_LOADER} ./cmd/scope-ebpf
 	chmod +x bin/${EBPF_LOADER}
 
 fmt:
