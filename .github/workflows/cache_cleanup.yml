@@ -1,9 +1,8 @@
-name: cleanup caches by a branch
+name: Cleanup caches
 on:
   pull_request:
     types:
       - closed
-  workflow_dispatch:
 
 jobs:
   cleanup:
@@ -17,7 +16,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Cleanup
+      - name: Cleanup Caches from branches
+        if: github.event_name == 'pull_request'
         run: |
           gh extension install actions/gh-actions-cache
           

@@ -101,7 +101,7 @@ jobs:
           build-contexts: |
             cribl/scope-ebpf-builder=docker-image://localhost:5000/cribl/scope-ebpf-builder:latest
 
-      - name: Build and push scope-ebpf image (tag)
+      - name: Build and push scope-ebpf image (tag/latest)
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         uses: docker/build-push-action@v4
         with:
