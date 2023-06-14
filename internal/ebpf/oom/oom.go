@@ -43,9 +43,14 @@ type oomEvent struct {
 	OomInfo        OomType
 }
 
-// Returns string value of prometheus metrics
-func (oe *oomEvent) String() string {
-	return fmt.Sprintf("pid=\"%d\" name=\"%s\", oomtype=\"%s\", cgroupPageLimit=\"%d\"", oe.Pid, bytes.Trim(oe.Comm[:], "\x00"), oe.OomInfo.String(), oe.CgroupMemLimit)
+// Returns string value of metrics in prometheus format
+func (oe *oomEvent) StringProm() string {
+	return fmt.Sprintf("pid=\"%d\", name=\"%s\", oomtype=\"%s\", cgroupPageLimit=\"%d\"", oe.Pid, bytes.Trim(oe.Comm[:], "\x00"), oe.OomInfo.String(), oe.CgroupMemLimit)
+}
+
+// Returns string value of metrics in statsD format
+func (oe *oomEvent) StringStatsd() string {
+	return fmt.Sprintf("pid=%d,name=%s,oomtype=%s,cgroupPageLimit=%d", oe.Pid, bytes.Trim(oe.Comm[:], "\x00"), oe.OomInfo.String(), oe.CgroupMemLimit)
 }
 
 // Serve Out of Memory events
@@ -92,6 +97,6 @@ func Serve(oomEventChan chan<- string) error {
 			continue
 		}
 
-		oomEventChan <- event.String()
+		oomEventChan <- event.StringStatsd()
 	}
 }

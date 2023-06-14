@@ -33,9 +33,14 @@ type sigFaultEvent struct {
 	Comm    [16]byte
 }
 
-// Returns string value of prometheus metrics
-func (sfe *sigFaultEvent) String() string {
-	return fmt.Sprintf("signal=\"%d\" pid=\"%d\" name=\"%s\", uid=\"%d\", gid=\"%d\"", sfe.Sig, sfe.Pid, bytes.Trim(sfe.Comm[:], "\x00"), sfe.Uid, sfe.Gid)
+// Returns string value of metrics in prometheus format
+func (sfe *sigFaultEvent) StringProm() string {
+	return fmt.Sprintf("signal=\"%d\", pid=\"%d\", name=\"%s\", uid=\"%d\", gid=\"%d\"", sfe.Sig, sfe.Pid, bytes.Trim(sfe.Comm[:], "\x00"), sfe.Uid, sfe.Gid)
+}
+
+// Returns string value of metrics in statsD format
+func (sfe *sigFaultEvent) StringStatsd() string {
+	return fmt.Sprintf("signal=%d,pid=%d,name=%s,uid=%d,gid=%d", sfe.Sig, sfe.Pid, bytes.Trim(sfe.Comm[:], "\x00"), sfe.Uid, sfe.Gid)
 }
 
 // // Serve Signal fault events
@@ -85,7 +90,7 @@ func Serve(sigEventChan chan<- string) error {
 			continue
 		}
 
-		sigEventChan <- event.String()
+		sigEventChan <- event.StringStatsd()
 	}
 }
 

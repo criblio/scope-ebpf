@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/criblio/scope-ebpf/internal/ebpf/oom"
 	"github.com/criblio/scope-ebpf/internal/ebpf/sigdel"
-	"github.com/criblio/scope-ebpf/internal/prom"
+	"github.com/criblio/scope-ebpf/internal/statsd"
 	"github.com/rs/zerolog/log"
 )
 
@@ -16,14 +16,14 @@ func server(scopeServer string) {
 	signalEventChan := make(chan string, 50)
 	go sigdel.Serve(signalEventChan)
 
-	oomElement := prom.PromMetricCounter{
+	oomElement := statsd.StatsDCounter{
 		Name:    "oom_kill",
 		Counter: 0,
 		Unit:    "process",
 		Dest:    scopeServer,
 	}
 
-	signalElement := prom.PromMetricCounter{
+	signalElement := statsd.StatsDCounter{
 		Name:    "signal_fault",
 		Counter: 0,
 		Unit:    "signal",
