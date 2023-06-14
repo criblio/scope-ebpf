@@ -17,10 +17,10 @@ spec:
         - name: scope-ebpf
           image: cribl/scope-ebpf:latest
           imagePullPolicy: IfNotPresent
-          command: ["/bin/bash"]
+          command: ["/usr/local/bin/scope-ebpf"]
           args:
-            - "-c"
-            - "scope-ebpf --dest=scope-prom-export:9109 --debug"
+            - --dest=scope-stats-exporter:9109 
+            - --debug
           securityContext:
             capabilities:
               add: ["SYS_ADMIN"]
